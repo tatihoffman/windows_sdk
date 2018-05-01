@@ -74,7 +74,7 @@ There are different example apps inside the [`Adjust` directory][example]:
 
 You can use these example projects to see how the Adjust SDK can be integrated into your app.
 
-## <a id="basic-integration"></a>Basic integration
+## <a id="basic-integration"></a>Getting Started
 
 These are the basic steps required to integrate the Adjust SDK into your Windows Phone or Windows Store project. We are going to assume that you use Visual Studio 2015 or later, with the latest NuGet package manager installed. A previous version that supports Windows Phone 8.1 or Windows 8 should also work. The screenshots show the integration process for a Windows Universal app, but the procedure is very similar for both Windows Store or Phone apps. Any differences with Windows Phone 8.1 or Windows Store apps will be noted throughout the walkthrough.
 
