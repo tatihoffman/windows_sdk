@@ -17,8 +17,6 @@ This is the Windows SDK of adjust™. You can read more about adjust™ at [adju
  ### Deep linking
 
    * [Deep linking](#deeplinking)
-     * [Apple Universal Links](#apple-universal-links)
-     * [Deep linking on iOS 8 and earlier](#deeplinking-setup-old)
      * [Deferred deep linking scenario](#deeplinking-deferred)
      * [Reattribution via deep links](#deeplinking-reattribution)
 
@@ -201,79 +199,6 @@ Once you integrate the adjust SDK into your project, you can take advantage of t
 
 If you are using the adjust tracker URL with an option to deep link into your app from the URL, there is the possibility to get info about the deep link URL and its content. Hitting the URL can happen when the user has your app already installed (standard deep linking scenario) or if they don't have the app on their device (deferred deep linking scenario). Both of these scenarios are supported by the adjust SDK and in both cases the deep link URL will be provided to you after you app has been started after hitting the tracker URL. In order to use this feature in your app, you need to set it up properly.
 
-### <a id="apple-universal-links"></a>Apple Universal Links
-
-In order to set deep linking support for iOS 9 and later devices, you need to enable your app to handle Apple Universal Links. To find out more about universal links and how their setup looks like, you can check [here][universal-links].
-
-Implementing Universal Links is a mandatory step if you wish to use Adjust's attribution features to their full extent. [This guide][universal-links-guide] describes the steps that need to be taken in order for you to add Universal Links to your app.
-
-**On Safari and apps using Safari as in-app web browser, Deeplinks appended to an Adjust tracking URL (e.g. http://app.adjust.com/abc123?deep_link=myapp://) will only work after the implementation of universal linking.**
-
-Once you have successfully generated a Universal Link for your app in the Adjust dashboard, you need to do this in your app as well:
-
-After enabling `Associated Domains` for your app in Apple Developer Portal, you need to do the same thing in your app's Xcode project. After enabling `Assciated Domains`, add the universal link which was generated for you in the adjust dashboard in the `Domains` section by prefixing it with `applinks:` and make sure that you also remove the `http(s)` part of the universal link.
-
-![][associated-domains-applinks]
-
-After this has been set up, your app will be opened after you click the adjust tracker universal link. After app is opened, `continueUserActivity` method of your `AppDelegate` class will be triggered and the place where the content of the universal link URL will be delivered. If you want to access the content of the deep link, override this method.
-
-``` objc
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
- restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler {
-    if ([[userActivity activityType] isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-        NSURL *url = [userActivity webpageURL];
-
-        // url object contains your universal link content
-    }
-
-    // Apply your logic to determine the return value of this method
-    return YES;
-    // or
-    // return NO;
-}
-```
-
-With this setup, you have successfully set up deep linking handling for iOS devices with iOS 9 and later versions.
-
-We provide a helper function that allows you to convert a universal link to an old style deep link URL, in case you had some custom logic in your code which was always expecting deep link info to arrive in old style custom URL scheme format. You can call this method with universal link and the custom URL scheme name which you would like to see your deep link prefixed with and we will generate the custom URL scheme deep link for you:
-
-``` objc
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
- restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler {
-    if ([[userActivity activityType] isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-        NSURL *url = [userActivity webpageURL];
-
-        NSURL *oldStyleDeeplink = [Adjust convertUniversalLink:url scheme:@"adjustExample"];
-    }
-
-    // Apply your logic to determine the return value of this method
-    return YES;
-    // or
-    // return NO;
-}
-```
-
-### <a id="deeplinking-setup-old"></a>Deep linking on iOS 8 and earlier
-
-Deep linking on iOS 8 and earlier devices is being done with usage of a custom URL scheme setting. You need to pick a custom URL scheme name which your app will be in charge for opening. This scheme name will also be used in the adjust tracker URL as part of the `deep_link` parameter. In order to set this in your app, open your `Info.plist` file and add new `URL types` row to it. In there, as `URL identifier` write you app's bundle ID and under `URL schemes` add scheme name(s) which you want your app to handle. In the example below, we have chosen that our app should handle the `adjustExample` scheme name.
-
-![][custom-url-scheme]
-
-After this has been set up, your app will be opened after you click the adjust tracker URL with `deep_link` parameter which contains the scheme name which you have chosen. After app is opened, `openURL` method of your `AppDelegate` class will be triggered and the place where the content of the `deep_link` parameter from the tracker URL will be delivered. If you want to access the content of the deep link, override this method.
-
-```objc
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    // url object contains your deep link content
-
-    // Apply your logic to determine the return value of this method
-    return YES;
-    // or
-    // return NO;
-}
-```
-
-With this setup, you have successfully set up deep linking handling for iOS devices with iOS 8 and earlier versions.
 
 ### <a id="deeplinking-deferred"></a>Deferred deep linking scenario
 
