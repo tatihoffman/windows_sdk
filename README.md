@@ -44,7 +44,6 @@ This is the Windows SDK of adjust™. You can read more about adjust™ at [adju
    * [User attribution](#user-attribution)
    * [Event and session callbacks](#event-session-callbacks)
    * [Device IDs](#device-ids)
-     * [iOS Advertising Identifier](#di-idfa)
      * [Adjust device identifier](#di-adid)
    * [Pre-installed trackers](#pre-installed-trackers)
    * [Event buffering](#event-buffering)
@@ -572,14 +571,6 @@ And both event and session failed objects also contain:
 
 The adjust SDK offers you possibility to obtain some of the device identifiers.
 
-### <a id="di-idfa"></a>iOS Advertising Identifier
-
-Certain services (such as Google Analytics) require you to coordinate device and client IDs in order to prevent duplicate reporting.
-
-To obtain the device identifier IDFA, call the function `idfa`:
-
-```objc
-NSString *idfa = [Adjust idfa];
 ```
 
 ### <a id="di-adid"></a>Adjust device identifier
